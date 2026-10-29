@@ -216,8 +216,9 @@ Quatro mecanismos concretos:
    `@dataclass(frozen=True)`. Tentar `livro.titulo = "outro"` levanta
    `FrozenInstanceError`. Não é convenção nem disciplina do programador: a
    linguagem recusa.
-2. **Devolução sem mutação.** `Emprestimo.devolvido_em(data)` usa
-   `dataclasses.replace` e devolve uma **instância nova** com a data preenchida.
+2. **Devolução sem mutação.** `Emprestimo.devolvido_em(data)` constrói e devolve
+   um **objeto novo**, copiando os campos do original e preenchendo só a data de
+   devolução.
    O empréstimo original continua existindo intacto; a `Biblioteca` troca a
    referência na sua lista. Isso preserva o histórico e torna impossível
    "desdevolver" por acidente.

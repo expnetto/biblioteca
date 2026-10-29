@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-from collections.abc import Iterable
 from datetime import date
 from functools import reduce
 
@@ -9,7 +6,7 @@ from .multas import VALOR_MULTA_DIARIA, calcular_multa, emprestimos_atrasados
 
 
 def total_de_multas_funcional(
-    emprestimos: Iterable[Emprestimo],
+    emprestimos: tuple[Emprestimo, ...],
     data_referencia: date,
     valor_diario: float = VALOR_MULTA_DIARIA,
 ) -> float:
@@ -24,7 +21,7 @@ def total_de_multas_funcional(
 
 
 def total_de_multas_imperativo(
-    emprestimos: Iterable[Emprestimo],
+    emprestimos: tuple[Emprestimo, ...],
     data_referencia: date,
     valor_diario: float = VALOR_MULTA_DIARIA,
 ) -> float:

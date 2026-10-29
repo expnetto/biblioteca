@@ -148,7 +148,7 @@ de duplicação que faz as duas se separarem quando a regra mudar.
 | As cinco estatísticas (§5.5) | `estatisticas.py` |
 | Imutabilidade (§5.6) | `frozen=True`, retornos em `tuple`, `reduce` sem mutação |
 | Comparação de paradigmas (§6) | `comparacao.py` |
-| Mínimo de três funções puras (§7) | doze funções puras em `consultas.py`, `multas.py` e `estatisticas.py` |
+| Mínimo de três funções puras (§7) | 17 funções puras de módulo em `consultas.py`, `multas.py`, `estatisticas.py` e `comparacao.py` |
 | `reduce` no relatório e em estatística (§7) | `multas.relatorio_de_multas`, `estatisticas.quantidade_de_livros_por_categoria`, `estatisticas.quantidade_de_emprestimos_por_usuario` |
 | Separação puro/impuro (§7) | tabela de arquitetura acima |
 | Executar e demonstrar (§7) | `main.py` e `cli.py`, com quatro cenários |

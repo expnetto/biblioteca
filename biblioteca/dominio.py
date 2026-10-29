@@ -1,6 +1,4 @@
-from __future__ import annotations
-
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from datetime import date
 
 
@@ -39,5 +37,12 @@ class Emprestimo:
             return 0
         return (data_referencia - self.data_prevista_devolucao).days
 
-    def devolvido_em(self, data: date) -> Emprestimo:
-        return replace(self, data_devolucao=data)
+    def devolvido_em(self, data: date) -> "Emprestimo":
+        return Emprestimo(
+            identificador=self.identificador,
+            livro=self.livro,
+            usuario=self.usuario,
+            data_emprestimo=self.data_emprestimo,
+            data_prevista_devolucao=self.data_prevista_devolucao,
+            data_devolucao=data,
+        )

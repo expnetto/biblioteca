@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from datetime import date, timedelta
 
 from .biblioteca import Biblioteca
@@ -90,9 +88,13 @@ def cenario_misto(data_base: date) -> Biblioteca:
     return biblioteca
 
 
+def cenario_vazio(data_base: date) -> Biblioteca:
+    return biblioteca_vazia()
+
+
 CENARIOS = (
     ("Com atrasos", cenario_com_atrasos),
     ("Em dia", cenario_em_dia),
     ("Misto (ativos, atrasados e devolvidos)", cenario_misto),
-    ("Vazio", lambda data_base: biblioteca_vazia()),
+    ("Vazio", cenario_vazio),
 )

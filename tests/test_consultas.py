@@ -67,12 +67,12 @@ def test_livros_disponiveis_exclui_os_emprestados():
 
 
 def test_proximo_identificador_comeca_em_um():
-    assert proximo_identificador("L", ()) == "L1"
+    assert proximo_identificador("L", 0) == "L1"
 
 
-def test_proximo_identificador_usa_o_maior_numero_existente():
-    assert proximo_identificador("L", ("L1", "L2", "L7")) == "L8"
+def test_proximo_identificador_segue_a_quantidade_cadastrada():
+    assert proximo_identificador("L", 6) == "L7"
 
 
-def test_proximo_identificador_ignora_prefixos_diferentes():
-    assert proximo_identificador("E", ("L5", "U9", "E2")) == "E3"
+def test_proximo_identificador_respeita_o_prefixo():
+    assert proximo_identificador("E", 2) == "E3"

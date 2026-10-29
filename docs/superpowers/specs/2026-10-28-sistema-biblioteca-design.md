@@ -357,3 +357,42 @@ booleano, e a comparação imperativa × funcional com o que se observa nela.
 - Prazo de devolução padrão sugerido pelo CLI ao registrar um empréstimo.
 - Se a validação de data aceita um ou mais formatos de entrada.
 - Como apresentar o mapa requisito → código no README.
+
+---
+
+## 13. Ajustes feitos depois da implementação (2026-10-29)
+
+O código foi revisado com um critério que não estava neste documento e passou a
+estar: **nada deve ficar acima do nível da disciplina**, porque o aluno precisa
+conseguir explicar qualquer linha sem apoio. Um recurso elegante que ele não
+saiba defender vale menos que um recurso simples que ele domine. As mudanças:
+
+1. `from __future__ import annotations` removido de todos os arquivos. Era ruído
+   desnecessário em Python 3.14 e difícil de justificar numa pergunta.
+2. Anotações de tipo passaram de `Iterable[Livro]` para `tuple[Livro, ...]`.
+   Tipos concretos, sem o conceito de protocolo de iteração por trás.
+3. `Emprestimo.devolvido_em` constrói o novo objeto campo por campo em vez de usar
+   `dataclasses.replace`. Fica mais verboso e mais explicável: dá para apontar o
+   objeto novo sendo criado, que é justamente o argumento da questão C.
+4. `proximo_identificador` passou a receber a quantidade já cadastrada em vez de
+   derivar o maior número existente com `map`, `filter`, fatiamento de string e
+   `max(..., default=0)`. A versão anterior era quatro vezes maior e resolvia um
+   problema que não existe, porque nada é removido das coleções. A recusa de
+   identificador duplicado continua sendo a rede de segurança.
+5. `formatar_reais` perdeu o truque de três `replace` encadeados para inverter
+   separador de milhar e decimal. Os valores em jogo são pequenos e um `replace`
+   resolve.
+6. A leitura de data aceita só `dd/mm/aaaa`, em vez de tentar três formatos. A
+   generalidade extra não servia a ninguém.
+7. O `lambda` dentro da tupla `CENARIOS` virou a função `cenario_vazio`.
+
+O que **não** foi simplificado, e por quê: a hierarquia de exceções próprias
+(`ErroDeBiblioteca` e as cinco filhas) ficou. É herança, que é conteúdo central de
+POO, demonstra o conceito de forma concreta e é a alternativa a falhar em
+silêncio. `@dataclass(frozen=True)` também ficou: é o mecanismo de imutabilidade
+do projeto e o que sustenta a resposta da questão C.
+
+Verificação após os ajustes: 68 testes passando, nenhum comentário ou docstring,
+e o teste de mutação (quebrar o código de propósito para ver se a suíte percebe)
+pegou 8 de 10 quebras, sendo as 2 restantes mutações equivalentes, sem efeito
+observável.
