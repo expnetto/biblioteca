@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import date
 from functools import reduce
@@ -31,7 +28,7 @@ def calcular_multa(dias_atraso: int, valor_diario: float) -> float:
 
 
 def emprestimos_atrasados(
-    emprestimos: Iterable[Emprestimo], data_referencia: date
+    emprestimos: tuple[Emprestimo, ...], data_referencia: date
 ) -> tuple[Emprestimo, ...]:
     return tuple(
         filter(
@@ -54,7 +51,7 @@ def multa_do_emprestimo(
 
 
 def relatorio_de_multas(
-    emprestimos: Iterable[Emprestimo],
+    emprestimos: tuple[Emprestimo, ...],
     data_referencia: date,
     valor_diario: float = VALOR_MULTA_DIARIA,
 ) -> RelatorioMultas:

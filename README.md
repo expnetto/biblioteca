@@ -5,7 +5,7 @@ Programação Orientada a Objetos e Programação Funcional.
 
 **Aluno:** Eraldo Xavier Pimentel Netto
 **Modalidade:** individual
-**Linguagem:** Python 3.10+ (desenvolvido e testado em Python 3.14.7)
+**Linguagem:** Python 3.10+ (testado em Python 3.14)
 **Dependências de execução:** nenhuma, apenas a biblioteca padrão
 
 ## Como executar
@@ -84,9 +84,10 @@ cli.py                         impuro   imprime
 **Imutabilidade.** `Livro`, `Usuario` e `Emprestimo` são `@dataclass(frozen=True)`:
 qualquer tentativa de alterar um atributo levanta `FrozenInstanceError`. A
 devolução não altera o empréstimo — `Emprestimo.devolvido_em()` devolve uma
-instância nova. Todas as funções puras devolvem `tuple`, nunca `list`, para que o
-resultado não possa ser alterado por engano. As estatísticas de contagem usam
-`reduce` criando um dicionário novo a cada passo, sem nunca mutar o acumulador.
+instância nova. As funções puras de filtragem e consulta devolvem `tuple`, nunca
+`list`, para que o resultado não possa ser alterado por engano. As estatísticas de
+contagem devolvem um `dict` novo a cada chamada e usam `reduce` criando um
+dicionário novo a cada passo, sem nunca mutar o acumulador nem o que receberam.
 
 **Encapsulamento.** A `Biblioteca` é a única classe com estado mutável. Suas
 coleções (`_livros`, `_usuarios`, `_emprestimos`) são privadas e nunca devolvidas
@@ -148,7 +149,7 @@ de duplicação que faz as duas se separarem quando a regra mudar.
 | As cinco estatísticas (§5.5) | `estatisticas.py` |
 | Imutabilidade (§5.6) | `frozen=True`, retornos em `tuple`, `reduce` sem mutação |
 | Comparação de paradigmas (§6) | `comparacao.py` |
-| Mínimo de três funções puras (§7) | doze funções puras em `consultas.py`, `multas.py` e `estatisticas.py` |
+| Mínimo de três funções puras (§7) | 17 funções puras de módulo em `consultas.py`, `multas.py`, `estatisticas.py` e `comparacao.py` |
 | `reduce` no relatório e em estatística (§7) | `multas.relatorio_de_multas`, `estatisticas.quantidade_de_livros_por_categoria`, `estatisticas.quantidade_de_emprestimos_por_usuario` |
 | Separação puro/impuro (§7) | tabela de arquitetura acima |
 | Executar e demonstrar (§7) | `main.py` e `cli.py`, com quatro cenários |

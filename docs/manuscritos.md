@@ -66,6 +66,8 @@ sobre o próprio estado. `devolvido_em` não altera o objeto: devolve um novo.
 + emprestimos(): tuple[Emprestimo]
 + registrar_emprestimo(id_livro, id_usuario, data_emprestimo, data_prevista): Emprestimo
 + registrar_devolucao(id_emprestimo, data_devolucao): Emprestimo
++ proximo_identificador_de_livro(): str
++ proximo_identificador_de_usuario(): str
 + relatorio_de_multas(data_referencia): RelatorioMultas
 + estatisticas(data_referencia): Estatisticas
 ```
@@ -92,7 +94,9 @@ um sem `data_devolucao`.
 ## 2. Diagrama de Fluxo de Processamento Funcional
 
 Fluxo da geração do relatório de multas. Sete blocos ligados por setas de cima
-para baixo. Cada bloco leva as cinco informações exigidas.
+para baixo. Cada bloco leva as cinco informações exigidas. Os blocos 3 a 6 acontecem
+dentro de `multas.relatorio_de_multas`, que o bloco 2 chama passando a cópia em
+`tuple[Emprestimo]` do estado interno e a data de referência.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -106,8 +110,8 @@ para baixo. Cada bloco leva as cinco informações exigidas.
 ┌─────────────────────────────────────────────────────────┐
 │ Biblioteca.relatorio_de_multas                          │
 │ recebe: data_referencia                                 │
-│ produz: tuple[Emprestimo] (copia do estado interno)     │
-│ IMPURA  (le estado mutavel de self._emprestimos)        │
+│ produz: RelatorioMultas (montado pelos blocos abaixo)   │
+│ IMPURA  (le self._emprestimos e repassa uma copia)      │
 │ operacao funcional: nenhuma                             │
 └───────────────────────┬─────────────────────────────────┘
                         v
@@ -199,8 +203,11 @@ Não é pura por três razões independentes, e qualquer uma bastaria:
    `LivroIndisponivelError` na segunda, porque depende de `self._emprestimos`.
    Não há transparência referencial: a chamada não pode ser trocada pelo seu
    resultado.
-3. **Gera o identificador a partir do estado atual.** `proximo_identificador`
-   devolve `E1`, depois `E2`, conforme o que já existe.
+3. **Gera o identificador a partir do estado atual.** O identificador vem de
+   `proximo_identificador("E", len(self._emprestimos))`: devolve `E1`, depois
+   `E2`, conforme a quantidade já registrada. A função `proximo_identificador`
+   em si é pura — quem é impuro é o método, que lê `self._emprestimos` para
+   saber o que passar a ela.
 
 Outro exemplo bom de citar é o `cli.py` inteiro, que é o único lugar do projeto
 com `input()` e `print()` — entrada e saída são efeitos colaterais por definição,
@@ -216,14 +223,16 @@ Quatro mecanismos concretos:
    `@dataclass(frozen=True)`. Tentar `livro.titulo = "outro"` levanta
    `FrozenInstanceError`. Não é convenção nem disciplina do programador: a
    linguagem recusa.
-2. **Devolução sem mutação.** `Emprestimo.devolvido_em(data)` usa
-   `dataclasses.replace` e devolve uma **instância nova** com a data preenchida.
+2. **Devolução sem mutação.** `Emprestimo.devolvido_em(data)` constrói e devolve
+   um **objeto novo**, copiando os campos do original e preenchendo só a data de
+   devolução.
    O empréstimo original continua existindo intacto; a `Biblioteca` troca a
    referência na sua lista. Isso preserva o histórico e torna impossível
    "desdevolver" por acidente.
-3. **Saídas em tupla.** Todas as funções puras e todos os métodos de consulta da
-   `Biblioteca` devolvem `tuple`, não `list`. Quem recebe não consegue alterar o
-   resultado nem, por tabela, o estado interno da biblioteca.
+3. **Saídas em tupla.** As funções puras de filtragem e consulta e os métodos de
+   consulta da `Biblioteca` devolvem `tuple`, não `list`. Quem recebe não consegue
+   alterar o resultado nem, por tabela, o estado interno da biblioteca. As
+   estatísticas de contagem devolvem um `dict` novo, sem alterar o que receberam.
 4. **Acumulador não mutado no `reduce`.** Nas estatísticas, cada passo cria um
    dicionário novo com `{**contagem, chave: contagem.get(chave, 0) + 1}` em vez
    de `contagem[chave] += 1`.

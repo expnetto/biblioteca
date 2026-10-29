@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from datetime import date
 
 from .consultas import esta_disponivel, proximo_identificador
@@ -90,14 +88,10 @@ class Biblioteca:
         return usuario
 
     def proximo_identificador_de_livro(self) -> str:
-        return proximo_identificador(
-            "L", tuple(livro.identificador for livro in self._livros)
-        )
+        return proximo_identificador("L", len(self._livros))
 
     def proximo_identificador_de_usuario(self) -> str:
-        return proximo_identificador(
-            "U", tuple(usuario.identificador for usuario in self._usuarios)
-        )
+        return proximo_identificador("U", len(self._usuarios))
 
     def registrar_emprestimo(
         self,
@@ -117,9 +111,7 @@ class Biblioteca:
                 "Data prevista de devolucao anterior a data do emprestimo"
             )
         emprestimo = Emprestimo(
-            identificador=proximo_identificador(
-                "E", tuple(item.identificador for item in self._emprestimos)
-            ),
+            identificador=proximo_identificador("E", len(self._emprestimos)),
             livro=livro,
             usuario=usuario,
             data_emprestimo=data_emprestimo,

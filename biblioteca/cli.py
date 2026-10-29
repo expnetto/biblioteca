@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from datetime import date, datetime, timedelta
 
 from .biblioteca import Biblioteca, ErroDeBiblioteca
@@ -18,7 +16,7 @@ PRAZO_PADRAO_EM_DIAS = 14
 
 
 def formatar_reais(valor: float) -> str:
-    return f"R$ {valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    return f"R$ {valor:.2f}".replace(".", ",")
 
 
 def formatar_data(valor: date) -> str:
@@ -39,16 +37,11 @@ def ler_texto(rotulo: str) -> str:
     return valor
 
 
-FORMATOS_DE_DATA = ("%d/%m/%Y", "%d-%m-%Y", "%Y-%m-%d")
-
-
 def converter_data(entrada: str) -> date | None:
-    for formato in FORMATOS_DE_DATA:
-        try:
-            return datetime.strptime(entrada, formato).date()
-        except ValueError:
-            continue
-    return None
+    try:
+        return datetime.strptime(entrada, "%d/%m/%Y").date()
+    except ValueError:
+        return None
 
 
 def ler_data(rotulo: str, sugestao: date) -> date:
