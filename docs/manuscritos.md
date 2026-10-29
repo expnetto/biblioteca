@@ -66,6 +66,8 @@ sobre o próprio estado. `devolvido_em` não altera o objeto: devolve um novo.
 + emprestimos(): tuple[Emprestimo]
 + registrar_emprestimo(id_livro, id_usuario, data_emprestimo, data_prevista): Emprestimo
 + registrar_devolucao(id_emprestimo, data_devolucao): Emprestimo
++ proximo_identificador_de_livro(): str
++ proximo_identificador_de_usuario(): str
 + relatorio_de_multas(data_referencia): RelatorioMultas
 + estatisticas(data_referencia): Estatisticas
 ```
@@ -199,8 +201,11 @@ Não é pura por três razões independentes, e qualquer uma bastaria:
    `LivroIndisponivelError` na segunda, porque depende de `self._emprestimos`.
    Não há transparência referencial: a chamada não pode ser trocada pelo seu
    resultado.
-3. **Gera o identificador a partir do estado atual.** `proximo_identificador`
-   devolve `E1`, depois `E2`, conforme o que já existe.
+3. **Gera o identificador a partir do estado atual.** O identificador vem de
+   `proximo_identificador("E", len(self._emprestimos))`: devolve `E1`, depois
+   `E2`, conforme a quantidade já registrada. A função `proximo_identificador`
+   em si é pura — quem é impuro é o método, que lê `self._emprestimos` para
+   saber o que passar a ela.
 
 Outro exemplo bom de citar é o `cli.py` inteiro, que é o único lugar do projeto
 com `input()` e `print()` — entrada e saída são efeitos colaterais por definição,
